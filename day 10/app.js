@@ -1,33 +1,26 @@
 const express = require('express');
-const bodyParser = require('body-parser');
-const path = require('path');
-
 const app = express();
-const port = 3000;
+const bodyParser = require('body-parser');
 
-// Middleware
-app.use(bodyParser.urlencoded({ extended: true }));
-app.use(bodyParser.json());
-app.use(express.static(path.join(__dirname, 'public'))); // Serve static files
-
-// Set EJS as the view engine
 app.set('view engine', 'ejs');
+app.use(express.static('public'));
+app.use(bodyParser.urlencoded({ extended: true }));
 
-// Render the login form at the root URL
 app.get('/', (req, res) => {
-  res.render('login');
+    res.render('form');
 });
 
-// Handle form submission with POST
 app.post('/post-subscribe', (req, res) => {
-  const { username, password } = req.body;
-  console.log(`Username: ${username}, Password: ${password}`);
-  
-  // Respond with a success message or redirect
-  res.json({ message: 'Form submitted successfully!' });
+    const { name, email } = req.body;
+    const response = {
+        message: `Thank you for subscribing, ${name}!`,
+        email: email
+    };
+    res.json(response);
 });
 
-// Start the server
-app.listen(port, () => {
-  console.log(`Server is running on http://localhost:${port}`);
+const PORT = process.env.PORT || 3000;
+
+app.listen(PORT, () => {
+    console.log(`Server is running on http://localhost:${PORT}`);
 });
